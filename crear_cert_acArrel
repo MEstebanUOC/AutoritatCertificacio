@@ -1,0 +1,4 @@
+# Construir CSR per al certificat de l'AC Arrel
+openssl req -new -config acA.conf -out ac/acA.csr -keyout ac/acA/private/acA.key
+# Crear certificat de l'AC Arrel
+openssl ca -selfsign -config acA.conf -in ac/acA.csr -out ac/acA.crt -extensions acA_ext
