@@ -1,5 +1,0 @@
-# Construir CSR per al certificat AC Intermediària
-openssl req -new -config acI.conf -out ac/acI.csr -keyout ac/acI/private/acI.key
-
-# Crear el certificat per l'AC Intermediària
-openssl ca -config acA.conf -in ac/acI.csr -out ac/acI.crt -extensions acI_ext
