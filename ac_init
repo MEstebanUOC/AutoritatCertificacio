@@ -1,20 +1,39 @@
-# Creació de l'estructura de carpetes AC Arrel
-mkdir -p ac/acA/private ac/acA/db crl certs
+#!/bin/bash
 
-# Creació i inicialització dels fitxers de BD AC Arrel
-cp /dev/null ac/acA/db/acA.db
-cp /dev/null ac/acA/db/acA.db.attr
-echo 01 > ac/acA/db/acA.crt.srl
-echo 01 > ac/acA/db/acA.crl.srl
+read -r -p "Voleu inicialitzar l'estructura i fitxers BD de l'AC Local [S/n]" resposta
+ resposta=${resposta,,} # tolower
+ if [[ $resposta =~ ^(s| ) ]] || [[ -z $resposta ]]; then
+    # Creació de l'estructura de carpetes AC Arrel
+    mkdir -p ac/acA/private ac/acA/db crl certs
+	echo "- Estructura de carpetes AC Arrel creada"
 
-# Creació de l'estructura de carpetes AC Intermitja
-mkdir -p ac/acI/private ac/acI/db crl certs
+	#Creació i inicialització dels fitxers de BD AC Arrel
+	cp /dev/null ac/acA/db/acA.db
+	echo "- Fitxer BD acA creat"
+	cp /dev/null ac/acA/db/acA.db.attr
+	echo "- Fitxer atributs acA creat"
+	echo 01 > ac/acA/db/acA.crt.srl
+	echo "- Fitxer números de serie certificats acA creat"
+	echo 01 > ac/acA/db/acA.crl.srl
+	echo "- Fitxer números de serie CRL acA creat"
+	
 
-# Creació i inicialització dels fitxers de BD
-cp /dev/null ac/acI/db/acI.db
-cp /dev/null ac/acI/db/acI.db.attr
-echo 01 > ac/acI/db/acI.crt.srl
-echo 01 > ac/acI/db/acI.crl.srl
+	# Creació de l'estructura de carpetes AC Intermitja
+	mkdir -p ac/acI/private ac/acI/db crl certs
+	echo "- Estructura de carpetes AC Intermèdia creada"
+	
+	# Creació i inicialització dels fitxers de BD
+	cp /dev/null ac/acI/db/acI.db
+	echo "- Fitxer BD acI creat"
+	cp /dev/null ac/acI/db/acI.db.attr
+	echo "- Fitxer atributs acI creat"
+	echo 01 > ac/acI/db/acI.crt.srl
+	echo "- Fitxer números de sèrie certificats acI creat"
+	echo 01 > ac/acI/db/acI.crl.srl
+	echo "- Fitxer números de sèrie CRL acI creat"
+	
+	echo "ac_init finalitzat, podeu procedir a crear el certificat AC Arrel amb 'ac_crear_acA'"
+fi
 
 
 

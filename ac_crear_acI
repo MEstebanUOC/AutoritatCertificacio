@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Construir CSR per al certificat AC Intermediària
 openssl req -new -config acI.conf -out ac/acI.csr -keyout ac/acI/private/acI.key
 

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+read -r -p "Voleu destruir l'estructura i fitxers BD de l'AC Local [s/N]" resposta
+ resposta=${resposta,,} # tolower
+ if [[ $resposta =~ ^(s| ) ]]; then
+    # Esborram la carpeta ac
+    rm -rf ac
+	echo "- Esborrada tota l'AC Local"
+fi
+
+
+

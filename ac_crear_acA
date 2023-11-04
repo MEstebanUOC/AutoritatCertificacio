@@ -1,4 +1,9 @@
+#!/bin/bash
+
 # Construir CSR per al certificat de l'AC Arrel
 openssl req -new -config acA.conf -out ac/acA.csr -keyout ac/acA/private/acA.key
+
 # Crear certificat de l'AC Arrel
 openssl ca -selfsign -config acA.conf -in ac/acA.csr -out ac/acA.crt -extensions acA_ext
+
+echo "ac_crear_aCA finalitzat. Si heu creat correctament el certificat acA, podeu procedir a crear el certificat AC Intermèdia amb 'ac_crear_acI'"
