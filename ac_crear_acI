@@ -1,7 +1,16 @@
 #!/bin/bash
 
-# Construir CSR per al certificat AC Intermediària
+# Construir CSR per al certificat AC Intermèdia
 openssl req -new -config acI.conf -out ac/acI.csr -keyout ac/acI/private/acI.key
 
-# Crear el certificat per l'AC Intermediària
-openssl ca -config acA.conf -in ac/acI.csr -out ac/acI.crt -extensions acI_ext
+if [ $? -eq 0 ]; then
+   # Crear el certificat per l'AC Intermèdia
+   openssl ca -config acA.conf -in ac/acI.csr -out ac/acI.crt -extensions acI_ext
+
+   if [ $? -eq 0 ]; then
+      echo "ac_crear_aCI finalitzat. Podeu procedir a construir la cadena de certificació amb 'ac_crear_cacert'."
+   fi
+else
+   echo "Error! No ha estat possible crear el certificat de l'AC Intermèdia."
+fi
+

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Verificar si s'ha proporcionat un argument
+if [ "$#" -eq 0 ]; then
+    echo "Sintaxi: $0 <nom_fitxer>."
+    exit 1
+fi
+
+fitxer="$1"
+
+echo "Generant un certificat a /certs/$fitxer..."
+
+if [ -f certs/"$fitxer".crt ]; then
+   echo "El fitxer certs/$fitxer.crt ja existeix! Intentau un altre nom."
+else
+   echo "Generant fitxer CSR certs/$fitxer.csr..."
+   openssl req -new -config usuari.conf -out certs/"$fitxer".csr -keyout certs/"$fitxer".key
+
+   if [ $? -eq 0 ]; then
+       echo "Generant certificat certs/$fitxer.crt..."
+       openssl ca -config acI.conf -in certs/"$fitxer".csr -out certs/"$fitxer".crt -extensions usuari_ext
+     
+	   if [ $? -eq 0 ]; then
+          echo "Certificat creat a certs/$fitxer.crt correctament. Podeu usar ./ac_exportar_p12 per a exportar el certificat a PFX."
+       else
+          echo "Error! No s'ha pogut crear el certificat a certs/$fitxer.crt."
+       fi
+   else
+      echo "Error! No s'ha pogut crear el CSR a certs/$fitxer.csr."
+   fi
+fi
+

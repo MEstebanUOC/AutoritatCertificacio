@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Llegim paràmetre: Fitxer amb el certificat per a mostrar
+fitxer="$1"
+
+echo "Mostrant un certificat a $fitxer..."
+
+if [ -z $fitxer ]; then
+   echo "Error de sintaxi. Usau ./ca_mostrar_cert <fitxer>, on el nom del fitxer no pot quedar en blanc."
+else
+   if [ -f "$fitxer" ]; then
+      openssl x509 -in "$fitxer" -text
+   else
+      echo "Error! No s'ha trobat el certificat $fitxer."
+   fi
+fi
+

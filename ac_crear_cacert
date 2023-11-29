@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Certificats a afegir a la cadena de certificació
+arrel="ac/acA.crt"
+intermig="ac/acI.crt"
+
+echo "Generant el fitxer ac/cacert.pem que contindrà la cadena de certificació..."
+
+if [ -f $arrel ]; then
+   if [ -f $intermig ]; then
+      cat $arrel $intermig > ac/cacert.pem
+      if [ $? -eq 0 ]; then
+         echo "El fitxer ac/cacert.pem s'ha creat correctament."
+      else
+         echo "Error! No s'ha pogut crear correctament el fitxer ac/cacert.pem."
+      fi
+   else
+      echo "No s'ha trobat el certificat AC Intermig ($intermig). El podeu crear amb la comanda ac_crear_acI."
+   fi
+else
+   echo "No s'ha trobat el certificat AC Arrel ($arrel). El podeu crear amb la comanda ac_crear_acA."
+fi
+

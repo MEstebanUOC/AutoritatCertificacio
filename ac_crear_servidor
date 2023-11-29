@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Verificar si s'ha proporcionat un argument: nom del fitxer amb el qual es desarà el certificat
+if [ "$#" -eq 0 ]; then
+    echo "Sintaxi: $0 <fitxer> [fitxer_SAN], on <fitxer> serà el nom del fitxer del certificat (obligatori), i [fitxer_SAN] és opcional, i ha de contenir tots els valors SAN del certificat."
+    exit 1
+else
+   fitxer="$1"
+fi
+
+SAN=""
+# Verificar si s'ha proporcionat un segon argument: nom del fitxer amb la llista de SAN del certificat
+if [ $# -ge 2 ] && [ -n "$2" ]; then
+   fitxerSAN=$2
+   if [[ -e "$fitxerSAN" ]]; then
+      SAN=$(<"$fitxerSAN")
+   else
+      echo "Error! El fitxer d'extensió SAN $fitxerSAN no existeix." 
+      echo "Sintaxi: $0 <fitxer> [fitxer_SAN], on <fitxer> serà el nom del fitxer del certificat (obligatori), i [fitxer_SAN] és opcional, i ha de contenir tots els valors SAN del certificat."
+      exit 1
+   fi 
+fi
+
+# Llegir el FQDN (CommonName) per teclat
+read -p "Introduïu el FQDN per a l'atribut CommonName: " fqdn
+
+# Verificam que el FQDN introduït sigui correcte
+#fqdnRegex="^((([a-z0-9][a-z0-9\-]*[a-z0-9])|[a-z0-9]+)\.)*([a-z]+|xn\-\-[a-z0-9]+)\.?$"
+# RegExp que accepta el comodí com a subdomini
+fqdnRegex="^(((([a-z0-9][a-z0-9\-]*[a-z0-9])|[a-z0-9]+)|\*)\.)*([a-z0-9]+)\.?$"
+if [[ $fqdn =~ $fqdnRegex ]]; then
+   export AC_TLS_CN=$fqdn
+   
+   #Si la variable SAN no està en blanc, vol dir que hem usat el fitxer alternatiu per carregar l'extensió SAN
+   if [[ -n "$SAN" ]]; then
+      export AC_TLS_SAN=$SAN
+   else
+      export AC_TLS_SAN="DNS:$fqdn"
+   fi
+   echo "El FQDN $fqdn té una estructura correcta. Exportades variable d'entorn AC_TLS_CN=$AC_TLS_CN i AC_TLS_SAN=$AC_TLS_SAN"
+else
+   echo "Error! El FQDN $fqdn té una estructura incorrecta."
+   exit 1
+fi
+
+echo "Generant un certificat a /certs/$fitxer per a $fqdn"
+
+if [ -f certs/"$fitxer".crt ]; then
+   echo "El fitxer certs/$fitxer.crt ja existeix! Intentau un altre nom."
+else
+   echo "Generant fitxer CSR certs/$fitxer.csr..."
+   openssl req -new -config servidor.conf -out certs/"$fitxer".csr -keyout certs/"$fitxer".key
+
+   if [ $? -eq 0 ]; then
+       echo "Generant certificat certs/$fitxer.crt..."
+       openssl ca -config acI.conf -in certs/"$fitxer".csr -out certs/"$fitxer".crt -extensions tls_ext
+     
+	   if [ $? -eq 0 ]; then
+          echo "Certificat creat a certs/$fitxer.crt correctament. Podeu usar ./ac_exportar_p12 per a exportar el certificat a PFX."
+       else
+          echo "Error! No s'ha pogut crear el certificat a certs/$fitxer.crt."
+       fi
+   else
+      echo "Error! No s'ha pogut crear el CSR a certs/$fitxer.csr."
+   fi
+fi
+

@@ -32,7 +32,7 @@ read -r -p "Voleu inicialitzar l'estructura i fitxers BD de l'AC Local [S/n]" re
 	echo 01 > ac/acI/db/acI.crl.srl
 	echo "- Fitxer números de sèrie CRL acI creat"
 	
-	echo "ac_init finalitzat, podeu procedir a crear el certificat AC Arrel amb 'ac_crear_acA'"
+	echo "ac_init finalitzat. Podeu procedir a crear el certificat AC Arrel amb 'ac_crear_acA'"
 fi
 
 

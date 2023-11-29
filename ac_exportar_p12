@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Verificar si s'ha proporcionat un argument
+if [ "$#" -eq 0 ]; then
+    echo "Sintaxi: $0 <nom_fitxer>, on el nom del fitxer no pot quedar en blanc, i es correspon amb el nom d'un certificat emès (sense extensió)."
+    exit 1
+fi
+
+fitxer="$1"
+
+echo "Exportant el certificat certs/$fitxer.crt com a Personal Information eXchange (PFX)."
+
+# Comprovam que el fitxer que conté la cadena de certificació existeixi
+if [ -f "ac/cacert.pem" ]; then
+   # Comprovam que el fitxer que conté el certificat existeixi
+   if [ -f certs/"$fitxer".crt ]; then
+      openssl pkcs12 -export -inkey certs/$fitxer.key -in certs/$fitxer.crt -out certs/$fitxer.p12 -certfile ac/cacert.pem
+      # Si la comanda anterior ha finalitzat correctament...
+	  if [ $? -eq 0 ]; then
+         echo "S'ha exportat el fitxer certs/$fitxer.p12 correctament."
+      else
+         echo "Error! No s'ha exportat el fitxer certs/$fitxer.p12."
+      fi
+   else
+      echo "Error! No s'ha pogut trobar el certificat certs/$fitxer.crt." 
+   fi
+else
+   echo "Error! No s'ha pogut trobar el fitxer amb la cadena de certificació ac/cacert.pem. El podeu crear amb ac_crear_cacert."
+fi
+

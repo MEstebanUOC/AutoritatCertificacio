@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Llegim paràmetre: Fitxer amb el CSR per a mostrar
+fitxer="$1"
+
+echo "Mostrant CSR a $fitxer..."
+
+if [ -z $fitxer ]; then
+   echo "Error de sintaxi. Usau ./ca_mostrar_csr <fitxer>, on el nom del fitxer no pot quedar en blanc."
+else
+   if [ -f "$fitxer" ]; then
+      openssl req -in "$fitxer" -noout -text
+   else
+      echo "Error! No s'ha trobat el fitxer CSR $fitxer."
+   fi
+fi
+

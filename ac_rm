@@ -1,11 +1,17 @@
 #!/bin/bash
 
 read -r -p "Voleu destruir l'estructura i fitxers BD de l'AC Local [s/N]" resposta
- resposta=${resposta,,} # tolower
+resposta=${resposta,,} # tolower
  if [[ $resposta =~ ^(s| ) ]]; then
-    # Esborram la carpeta ac
+    # Esborram la carpeta ac i tot el seu contingut
     rm -rf ac
-	echo "- Esborrada tota l'AC Local"
+    echo "Esborrada tota l'AC Local."
+    # Esborram la carpeta de certificats i el seu contingut
+   rm -rf certs
+    echo "Esborrats tots els certificats"
+   # Esborram la carpeta de CRL i el seu contingut
+   rm -rf crl
+   echo "Esborrades totes les CRL"   
 fi
 
 

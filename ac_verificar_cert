@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Verificar si s'ha proporcionat un argument
+if [ "$#" -eq 0 ]; then
+    echo "Sintaxi: $0 <nom_fitxer.extensio>, on el nom del fitxer no pot quedar en blanc, i es correspon amb el nom d'un certificat emès (amb extensió)."
+    exit 1
+fi
+
+fitxer="$1"
+
+echo "Verificant el certificat $fitxer."
+
+# Comprovam que el fitxer que conté la cadena de certificació existeixi
+if [ -f "ac/cacert.pem" ]; then
+   # Comprovam que el fitxer que conté el certificat existeixi
+   if [ -f $fitxer ]; then
+      openssl verify -CAfile ac/cacert.pem $fitxer
+      # Si la comanda anterior ha finalitzat correctament...
+	  if [ $? -eq 0 ]; then
+         echo "El certificat $fitxer s'ha validat correctament."
+      else
+         echo "Error! Error de validació del certificat $fitxer."
+      fi
+   else
+      echo "Error! No s'ha pogut trobar el certificat $fitxer." 
+   fi
+else
+   echo "Error! No s'ha pogut trobar el fitxer amb la cadena de certificació ac/cacert.pem. El podeu crear amb ac_crear_cacert."
+fi
+
