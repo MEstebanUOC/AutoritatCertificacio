@@ -12,14 +12,13 @@ Creació de l'estructura de l'AC:
 Gestió de l'AC:
 
 5. Crear certificat final d'usuari: ca_crear_usuari <fitxer_certificat>
-6. Crear certificat final de servidor: ca_crear_servidor <fitxer_certificat> [fitxer_SAN]
+6. Crear certificat final SSL: ca_crear_ssl <fitxer_certificat>
 7. Revocar certificat final: ac_revocar_cert <fitxer_certificat>
 8. Generació de la CRL: ac_crear_crl
 9. Exportar fitxer PFX: ac_exportar_p12 <fitxer_certificat>
 
 Altres utilitats:
 
-· Mostrar un fitxer CSR qualsevol: ac_mostrar_csr <fitxer_CSR>
-· Mostrar un certificat qualsevol: ac_mostrar_cert <fitxer_CERTIFICAT>
+· Mostrar un certificat qualsevol: ac_mostrar_cert <fitxer>
 · Llistar certificats emesos: ac_llistar_certs
 · Eliminar tota la informació de l'AC: ac_rm

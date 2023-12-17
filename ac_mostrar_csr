@@ -3,11 +3,11 @@
 # Llegim paràmetre: Fitxer amb el CSR per a mostrar
 fitxer="$1"
 
-echo "Mostrant CSR a $fitxer..."
-
 if [ -z $fitxer ]; then
    echo "Error de sintaxi. Usau ./ca_mostrar_csr <fitxer>, on el nom del fitxer no pot quedar en blanc."
 else
+   # Els fitxers CSR s'emmagatzemen a la carpeta ./certs amb extensió .csr
+   fitxer="./certs/$fitxer.csr"
    if [ -f "$fitxer" ]; then
       openssl req -in "$fitxer" -noout -text
    else

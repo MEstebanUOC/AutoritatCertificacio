@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Llegim paràmetre: Fitxer amb el certificat a revocar
+fitxer="$1"
+
+if [ -z $fitxer ]; then
+   echo "Error de sintaxi. Usau ./ca_revocar_cert <fitxer>, on el nom del fitxer no pot quedar en blanc."
+else
+   # Els certificats es desen a la carpeta certs, amb extensió .crt
+   fitxer="./certs/$fitxer.crt"
+   if [ -f "$fitxer" ]; then
+      DN=$(openssl x509 -noout -subject -in "$fitxer")
+    
+      echo "El certificat es correspon amb $DN" 
+
+      # Mostrar opcions de motiu de revocació
+      # S'inclouen tots els valors possibles, però només
+      # seran utliitzats els indicats per Mozilla Foundation
+      echo "Motius de revocació disponibles:"
+      # echo "  0. No especificat"
+      echo "  1. Compromís de la clau"
+      # echo "  2. Compromís de la AC"
+      echo "  3. Canvi d'afiliació"
+      echo "  4. Suplantació"
+      echo "  5. Cessació d'operació"
+      #echo "  6. Retenció de certificat"
+      #echo "  8. Eliminar de la CRL"
+      echo "  9. Pèrdua de privilegis"
+      echo "  X. Sortir sense modificacions"
+
+      # Sol·licitar el motiu de revocació
+      read -p "Selecciona el motiu de revocació ([1,3,4,5,9],X): " motiu
+    
+      # Assignar el motiu segons l'opció de l'usuari
+      case $motiu in
+        # 0) motiu="unspecified";;
+        1) motiu="keyCompromise";;
+        # 2) motiu="CACompromise";;
+        3) motiu="affiliationChanged";;
+        4) motiu="superseded";;
+        5) motiu="cessationOfOperation";;
+        # 6) motiu="certificateHold";;
+        # 8) motiu="removeFromCRL";;
+        9) motiu="privilegeWithdrawn";;
+        X) echo "Sortint."; exit 1;;
+        *) echo "Opció no vàlida. Sortint."; exit 1;;
+      esac
+
+      # Revocar el certificat
+      openssl ca -config acI.conf -revoke "$fitxer" -crl_reason "$motiu"
+
+      if [ $? -eq 0 ]; then
+         echo "Certificat $DN revocat correctament per $motiu."
+      fi
+   else
+      echo "Error! No s'ha trobat el certificat $fitxer."
+   fi
+fi

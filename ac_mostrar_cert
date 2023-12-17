@@ -8,6 +8,8 @@ echo "Mostrant un certificat a $fitxer..."
 if [ -z $fitxer ]; then
    echo "Error de sintaxi. Usau ./ca_mostrar_cert <fitxer>, on el nom del fitxer no pot quedar en blanc."
 else
+   # Els certificats s'emmagatzemen a la carpeta ./certs amb extensió .crt
+   fitxer="./certs/$fitxer.crt"
    if [ -f "$fitxer" ]; then
       openssl x509 -in "$fitxer" -text
    else

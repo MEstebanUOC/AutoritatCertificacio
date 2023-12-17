@@ -12,14 +12,18 @@ echo "Verificant el certificat $fitxer."
 
 # Comprovam que el fitxer que conté la cadena de certificació existeixi
 if [ -f "ac/cacert.pem" ]; then
+   # Els certificats s'emmagatzemen a la carpeta ./certs amb extensió .crt
+   fitxer="./certs/$fitxer.crt"
+
    # Comprovam que el fitxer que conté el certificat existeixi
    if [ -f $fitxer ]; then
-      openssl verify -CAfile ac/cacert.pem $fitxer
+      DN=$(openssl x509 -noout -subject -in "$fitxer")
+      openssl verify -CRLfile crl/acintermedia.crl -crl_check -CAfile ac/cacert.pem $fitxer
       # Si la comanda anterior ha finalitzat correctament...
 	  if [ $? -eq 0 ]; then
-         echo "El certificat $fitxer s'ha validat correctament."
+         echo "El certificat $fitxer ($DN) i s'ha validat correctament."
       else
-         echo "Error! Error de validació del certificat $fitxer."
+         echo "Error! Error de validació del certificat $fitxer ($DN)."
       fi
    else
       echo "Error! No s'ha pogut trobar el certificat $fitxer." 

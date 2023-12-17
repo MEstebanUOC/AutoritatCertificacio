@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Llegim paràmetre: Fitxer amb el certificat per a mostrar
+fitxer="crl/acintermedia.crl"
+
+echo "Mostrant la llista CRL de l'AC Intermèdia."
+
+if [ -f "$fitxer" ]; then
+   openssl crl -in "$fitxer" -text -noout 
+ else
+   echo "Error! No s'ha trobat la CRL. La podeu generar amb l'script ./ac_construir_crl."
+fi
+

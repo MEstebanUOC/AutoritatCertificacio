@@ -1,0 +1,10 @@
+#!/bin/bash
+
+openssl ca -gencrl -config acI.conf -out crl/acintermedia.crl
+
+if [ $? -eq 0 ]; then
+   echo "S'ha generat la nova CRL per a l'AC Intermèdia a crl/acintermedia.crl. Assegurau-vos de distribuir-la als punts de distribució necessaris."
+fi
+
+
+
