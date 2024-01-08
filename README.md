@@ -19,6 +19,7 @@ Gestió de l'AC:
 
 Altres utilitats:
 · Mostrar un certificat qualsevol: ac_mostrar_cert <fitxer_certificat>
+· Verificar un certificat qualsevol: ac_validar_cert <fitxer_certificat>
 · Mostrar un fitxer CSR: ac_mostrar_csr <fitxer_CSR>
 · Mostrar un certificat qualsevol: ac_mostrar_cert <fitxer>
 · Llistar certificats emesos: ac_llistar_certs
